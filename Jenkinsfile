@@ -4,16 +4,6 @@ pipeline {
 	timestamps()
     }
     stages {
-	stage('MVN_Compile'){
-	   steps {
-		sh './mvnw compile'
-	   }
-	}
-	stage('MVN_Test'){
-	   steps {
-		sh './mvnw test'
-	   }
-	}
 	stage('MVN_Package'){
 	   steps {
 		sh './mvnw package'
@@ -28,6 +18,11 @@ pipeline {
 	    steps {
 		sh 'docker-compose up -d'
 	    }
+	}
+    }
+    post {
+	always {
+	   junit(testResults: 'target/surefire-reports/*xml', allowEmptyResults: true)
 	}
     }
 }
